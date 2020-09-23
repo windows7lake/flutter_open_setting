@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 
+
 object NotificationPageHelper {
     /**
      * 跳转到权限设置界面
@@ -28,7 +29,9 @@ object NotificationPageHelper {
             context.startActivity(appIntent)
             return
         }
+
         val intent = Intent()
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
                 intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
@@ -40,12 +43,10 @@ object NotificationPageHelper {
                 intent.putExtra("app_uid", context.applicationInfo.uid)
             }
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD -> {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                 intent.data = Uri.fromParts("package", context.packageName, null)
             }
             else -> {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.action = Intent.ACTION_VIEW
                 intent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails")
                 intent.putExtra("com.android.settings.ApplicationPkgName", context.packageName)
